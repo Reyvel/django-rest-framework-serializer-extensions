@@ -546,6 +546,7 @@ class ExpandableFieldsMixin(object):
                 .objects.all()
             )
 
+        
         return serializers.PrimaryKeyRelatedField(**kwargs)
 
     def get_expand_id_list_field(self, field_name, field_definition):
@@ -582,6 +583,9 @@ class ExpandableFieldsMixin(object):
             kwargs.update(pk_field=(
                 custom_fields.HashIdField(model=field_definition['id_model'])
             ))
+            
+        if 'allow_null' in field_definition:
+            kwargs.update(allow_null=field_definition['allow_null'])
 
         return serializers.PrimaryKeyRelatedField(**kwargs)
 
@@ -686,7 +690,10 @@ class ExpandableFieldsMixin(object):
                 validated_data[resolved_field_name] = instance
 
                 # Translate ID field contents back to an ID
-                validated_data[id_field_name] = instance.pk
+                if instance is None:
+                    validated_data[id_field_name] = None
+                else:
+                    validated_data[id_field_name] = instance.pk
 
         return validated_data
 
