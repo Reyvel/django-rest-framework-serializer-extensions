@@ -583,7 +583,7 @@ class ExpandableFieldsMixin(object):
             kwargs.update(pk_field=(
                 custom_fields.HashIdField(model=field_definition['id_model'])
             ))
-            
+        print(field_definition)
         if 'allow_null' in field_definition:
             kwargs.update(allow_null=field_definition['allow_null'])
 
